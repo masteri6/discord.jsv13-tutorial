@@ -7,7 +7,7 @@ const bot = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.G
 bot.commands = new Discord.Collection();
 // BOT - settings
 const prefix = '!'
-const token = 'ODM0MDgxNzYzODM5MTgwODAw.YH7tLA.jZZCUxhvt1gLdd2Pg_BPMmfQ-LU'
+const token = ''
 // BOT - login
 bot.login(token)
 // BOT - ready message
@@ -111,7 +111,7 @@ bot.on('messageCreate', message =>{
     else if(message.content.startsWith("m!setactivity")) {
         let type = args[1];
         let text = args.slice(2).join("")
-        if(message.author.id === "742453301504901121") {
+        if(message.author.id === "<your id>") {
             try {
                 bot.user.setActivity(`${text}`, { type: `${type}` });
                 } catch(e) {
@@ -125,7 +125,7 @@ bot.on('messageCreate', message =>{
     }
     else if(message.content.startsWith("m!setstatus")) {
         let status = args[1]
-        if(message.author.id === "742453301504901121") {
+        if(message.author.id === "<your id>") {
             try {
                 bot.user.setStatus(status);
                 } catch(e) {
