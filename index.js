@@ -7,7 +7,7 @@ const bot = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.G
 bot.commands = new Discord.Collection();
 // BOT - settings
 const prefix = '!'
-const token = ''
+const token = 'ODM0MDgxNzYzODM5MTgwODAw.YH7tLA.zJuXC7dwafrc5z6BBzwqwc-b8TE'
 // BOT - login
 bot.login(token)
 // BOT - ready message
@@ -45,6 +45,8 @@ bot.on('messageCreate', message => {
         bot.commands.get('gayrate').execute(message);
     } else if(command === 'buttons'){
         bot.commands.get('buttons').execute(message);
+    } else if(command === 'ticket-panel'){
+        bot.commands.get('ticket-panel').execute(message);
     }
 })
 
@@ -111,7 +113,7 @@ bot.on('messageCreate', message =>{
     else if(message.content.startsWith("m!setactivity")) {
         let type = args[1];
         let text = args.slice(2).join("")
-        if(message.author.id === "<your id>") {
+        if(message.author.id === "742453301504901121") {
             try {
                 bot.user.setActivity(`${text}`, { type: `${type}` });
                 } catch(e) {
@@ -125,7 +127,7 @@ bot.on('messageCreate', message =>{
     }
     else if(message.content.startsWith("m!setstatus")) {
         let status = args[1]
-        if(message.author.id === "<your id>") {
+        if(message.author.id === "742453301504901121") {
             try {
                 bot.user.setStatus(status);
                 } catch(e) {
@@ -151,11 +153,47 @@ bot.on("guildMemberAdd", guildmember =>{
 const { Message, MessageButton, MessageActionRow, MessageEmbed} = require('discord.js')
 
 bot.on('interactionCreate', async (interaction) => {
-
     await interaction.deferUpdate();
-    if(interaction.isButton()) {
-        if (interaction.customId === 'primary') {
-            interaction.followUp({ content: 'You click on Primary button', ephemeral: true})
+    if (interaction.isButton()) {
+        if (interaction.customId === 'ticket') {
+
+            const thread = await interaction.channel.threads.create({
+                name: `${interaction.user.tag}`,
+                autoArchiveDuration: 1440, // this is 24hrs 60 will make it 1 hr
+                //type: 'private_thread', // for private tickets u need server boosted to lvl 1 or 2 ok u need lvl 2, since mine is not boosted i will remove this LINE ONLY!
+            });
+            await thread.setLocked(true)
+            const embed = new MessageEmbed()
+                .setTitle('Ticket 🎫')
+                .setDescription('Hello there, \n The staff will be here as soon as possible mean while tell us about your issue!\nThank You!')
+                .setColor('#ED4245')
+                .setTimestamp()
+
+            const del = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                    .setCustomId('delticket')
+                    .setLabel('🗑️ Delete Ticket!')
+                    .setStyle('DANGER'),
+                );
+            interaction.user.send('Your ticket has been opened!');
+            thread.send({
+                content: `Welcome <@${interaction.user.id}> \`|\` <@&902855333167382528>`,
+                embeds: [embed],
+                components: [del]
+            }).then(interaction.followUp({
+                content: 'Created Ticket!',
+                ephemeral: true
+            }))
+            console.log(`Created thread: ${thread.name}`);
+            setTimeout(() => {
+                interaction.channel.bulkDelete(1)
+            }, 5000)
+        } else if (interaction.customId === 'delticket') {
+
+            const thread = interaction.channel
+            thread.delete();
+
         }
     }
 })
